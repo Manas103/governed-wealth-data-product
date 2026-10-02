@@ -1,0 +1,38 @@
+=== Governed Wealth Data Product -- profiling ===
+sources profiled: 6
+columns profiled: 118
+
+-- claim: 118 columns profiled --
+columns profiled: 118
+
+-- claim: 6 simulated retail-investment extracts --
+  accounts: 300 rows
+  positions: 1652 rows
+  cash_activity: 2438 rows
+  advice_enrollments: 147 rows
+  parties: 374 rows
+  fee_schedules: 269 rows
+
+-- claim: 9 quality defects found that no source had declared --
+defects found: 9
+  [implicit_enumeration] accounts.account_type: "account_type" in accounts takes only 4 distinct values (Advisory Managed, Education Savings, Retail Brokerage, Retail IRA) but no source has ever declared it as a closed set in the glossary.
+  [implicit_enumeration] positions.asset_class: "asset_class" in positions takes only 5 distinct values (Alternatives, Cash & Equivalents, Fixed Income, Intl Equity, US Equity) but no source has ever declared it as a closed set in the glossary.
+  [implicit_enumeration] advice_enrollments.enrollment_channel: "enrollment_channel" in advice_enrollments takes only 3 distinct values (Branch, Mobile App, Web) but no source has ever declared it as a closed set in the glossary.
+  [currency_scale_change] cash_activity.amount: "amount" in cash_activity has a median magnitude of 398,622.00 for activity_source_system='PAYMENTS_HUB' vs 4,152.87 for activity_source_system='CUSTODY_FEED', a 96.0x gap consistent with a silent unit-scale change, not natural variation.
+  [currency_scale_change] fee_schedules.annual_fee_amount: "annual_fee_amount" in fee_schedules has a median magnitude of 280,404.00 for fee_source_system='LEGACY_BILLING' vs 1,980.81 for fee_source_system='BILLING_ENGINE', a 141.6x gap consistent with a silent unit-scale change, not natural variation.
+  [mixed_date_format] advice_enrollments.enrollment_date: "enrollment_date" in advice_enrollments mixes 117 ISO-format (YYYY-MM-DD) dates with 30 US-format (MM/DD/YYYY) dates in the same column, with no flag distinguishing them.
+  [duplicate_natural_key] parties.party_id: "party_id" is declared as the natural key of parties but 6 value(s) appear on more than one row (12 rows total).
+  [orphan_foreign_key] positions.account_id: 5 row(s) in positions."account_id" reference a accounts.account_id value that does not exist in this pull.
+  [implausible_value] accounts.account_open_date: 4 account(s) have account_open_date outside the plausible 2000-01-01 to 2026-10-01 window (the firm's systems window), with no source rejecting them: ACCT-000032=1988-11-02, ACCT-000068=1955-03-01, ACCT-000130=1988-11-02, ACCT-000291=2027-04-19
+
+-- claim: 3 implicit enumerations --
+implicit enumerations found: 3
+
+-- claim: 2 silent currency-scale changes --
+currency scale changes found: 2
+
+other undeclared defects found:
+  mixed_date_format: 1
+  duplicate_natural_key: 1
+  orphan_foreign_key: 1
+  implausible_value: 1

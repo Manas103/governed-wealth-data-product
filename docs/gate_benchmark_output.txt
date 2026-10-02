@@ -1,0 +1,8 @@
+=== Governed Wealth Data Product -- publish gate benchmark ===
+
+-- claim: 24 of 24 seeded violations caught by column and source record --
+seeded violations caught: 24 / 24
+unexpected holds on the seeded-violation load: 0
+
+-- claim: 0 of 20 clean loads falsely held --
+false holds across 20 independent clean loads: 0
